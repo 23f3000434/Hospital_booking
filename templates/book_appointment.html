@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Book Appointment{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4><i class="fas fa-calendar-plus me-2"></i>Book Appointment with {{ doctor.name }}</h4>
+            </div>
+            
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="avatar-circle bg-success text-white mx-auto">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h5>{{ doctor.name }}</h5>
+                        <p class="text-muted">
+                            <span class="badge bg-info">{{ doctor.specialization }}</span><br>
+                            <i class="fas fa-award me-1"></i>{{ doctor.experience }} years experience<br>
+                            <i class="fas fa-envelope me-1"></i>{{ doctor.email }}<br>
+                            <i class="fas fa-phone me-1"></i>{{ doctor.phone }}
+                        </p>
+                        {% if doctor.qualifications %}
+                            <p><strong>Qualifications:</strong> {{ doctor.qualifications }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <h6>Available Slots:</h6>
+                
+                {% if slots %}
+                    <form method="POST" action="{{ url_for('patient.confirm_booking') }}">
+                        <input type="hidden" name="doctor_id" value="{{ doctor.id }}">
+                        
+                        <div class="row">
+                            {% for slot in slots[:21] %}  <!-- Show max 21 slots -->
+                                <div class="col-md-4 mb-3">
+                                    <input type="radio" class="btn-check" name="appointment_datetime" 
+                                           value="{{ slot.datetime_str }}" id="slot_{{ loop.index }}" required>
+                                    <label class="btn btn-outline-primary w-100" for="slot_{{ loop.index }}">
+                                        <div class="small">
+                                            <strong>{{ slot.date.strftime('%b %d') }}</strong><br>
+                                            {{ slot.time.strftime('%I:%M %p') }}
+                                        </div>
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('patient.view_doctors') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Doctors
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check me-2"></i>Confirm Booking
+                            </button>
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No available slots at the moment.</p>
+                        <a href="{{ url_for('patient.view_doctors') }}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left me-2"></i>Choose Another Doctor
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

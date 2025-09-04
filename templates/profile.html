@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h4><i class="fas fa-user me-2"></i>My Profile</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="text-center mb-4">
+                        <div class="avatar-circle bg-primary text-white mx-auto">
+                            <i class="fas fa-user fa-2x"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   value="{{ current_user.username }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email (Read-only)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" class="form-control" value="{{ current_user.email }}" readonly>
+                        </div>
+                        <div class="form-text">Email cannot be changed.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            <input type="tel" class="form-control" id="phone" name="phone" 
+                                   value="{{ current_user.phone or '' }}" required>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h6>Change Password (Optional)</h6>
+                    
+                    <div class="mb-3">
+                        <label for="new_password" class="form-label">New Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" id="new_password" name="new_password" 
+                                   placeholder="Leave blank to keep current password">
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Update Profile
+                        </button>
+                    </div>
+                </form>
+                
+                <hr>
+                
+                <div class="text-center">
+                    <a href="{{ url_for('patient.dashboard') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

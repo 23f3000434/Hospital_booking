@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Doctors{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-users-cog me-2"></i>Manage Doctors</h2>
+    <a href="{{ url_for('admin.add_doctor') }}" class="btn btn-success">
+        <i class="fas fa-user-plus me-2"></i>Add New Doctor
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if doctors %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Specialization</th>
+                            <th>Experience</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doctor in doctors %}
+                        <tr>
+                            <td>
+                                <strong>{{ doctor.name }}</strong>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">{{ doctor.specialization }}</span>
+                            </td>
+                            <td>{{ doctor.experience }} years</td>
+                            <td>
+                                <small>
+                                    {% if doctor.email %}<i class="fas fa-envelope me-1"></i>{{ doctor.email }}<br>{% endif %}
+                                    {% if doctor.phone %}<i class="fas fa-phone me-1"></i>{{ doctor.phone }}{% endif %}
+                                </small>
+                            </td>
+                            <td>
+                                {% if doctor.is_available %}
+                                    <span class="badge bg-success">Available</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Unavailable</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ url_for('admin.edit_doctor', doctor_id=doctor.id) }}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{{ url_for('admin.manage_doctor_schedule', doctor_id=doctor.id) }}" 
+                                       class="btn btn-sm btn-outline-info">
+                                        <i class="fas fa-calendar"></i>
+                                    </a>
+                                    <form method="POST" action="{{ url_for('admin.delete_doctor', doctor_id=doctor.id) }}" 
+                                          class="d-inline" onsubmit="return confirm('Delete this doctor?')">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No doctors found</h5>
+                <a href="{{ url_for('admin.add_doctor') }}" class="btn btn-success">
+                    <i class="fas fa-plus me-2"></i>Add First Doctor
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

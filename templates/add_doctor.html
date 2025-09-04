@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Add Doctor{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow">
+      <div class="card-header bg-success text-white">
+        <h4 class="mb-0">
+          <i class="fas fa-user-md me-2"></i>
+          Add New Doctor
+        </h4>
+      </div>
+      <div class="card-body">
+        <form method="POST" novalidate>
+          <div class="row">
+            <div class="col-md-8 mb-3">
+              <label for="name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="name" name="name" placeholder="Dr. A. B. Sharma" required>
+              <div class="invalid-feedback">Please provide the doctor's full name.</div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="experience" class="form-label">Experience (years)</label>
+              <input type="number" min="0" class="form-control" id="experience" name="experience" placeholder="10" required>
+              <div class="invalid-feedback">Please provide years of experience.</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="specialization" class="form-label">Specialization</label>
+              <input type="text" class="form-control" id="specialization" name="specialization" placeholder="Cardiology" required>
+              <div class="invalid-feedback">Please provide specialization.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="qualifications" class="form-label">Qualifications</label>
+              <input type="text" class="form-control" id="qualifications" name="qualifications" placeholder="MD, DM (Cardiology)">
+              <div class="form-text">Optional but recommended for admin records.</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="email" class="form-label">Email</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                <input type="email" class="form-control" id="email" name="email" placeholder="doctor@example.com">
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="phone" class="form-label">Phone</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                <input type="tel" class="form-control" id="phone" name="phone" placeholder="987-654-3210">
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mt-2">
+            <a href="{{ url_for('admin.manage_doctors') }}" class="btn btn-outline-secondary">
+              <i class="fas fa-arrow-left me-2"></i>Back
+            </a>
+            <button type="submit" class="btn btn-success">
+              <i class="fas fa-save me-2"></i>Add Doctor
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">
+          After adding the doctor, set their weekly schedule to enable appointment slots.
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Client-side validation helper (optional)
+(function() {
+  'use strict';
+  const forms = document.querySelectorAll('form');
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', function (event) {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+    }, false);
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor Schedule{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h4><i class="fas fa-calendar me-2"></i>Schedule for {{ doctor.name }} ({{ doctor.specialization }})</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.manage_doctor_schedule', doctor_id=doctor.id) }}">
+                    <div class="mb-4">
+                        <label for="slot_duration" class="form-label">Slot Duration (minutes)</label>
+                        <input type="number" class="form-control" id="slot_duration" name="slot_duration" min="5" step="5"
+                               value="{% if schedules and schedules|length > 0 %}{{ schedules[0].slot_duration }}{% else %}30{% endif %}" required>
+                    </div>
+
+                    {% set days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] %}
+
+                    {% for day in days %}
+                    <div class="border rounded p-3 mb-3">
+                        <h5 class="mb-3 text-capitalize text-primary"><i class="far fa-clock me-2"></i>{{ day }}</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ day }}_start_time" class="form-label">Start Time</label>
+                                <input type="time" class="form-control" id="{{ day }}_start_time" name="{{ day }}_start_time"
+                                    value="{% if schedules and schedules|length > loop.index0 and schedules[loop.index0].start_time %}{{ schedules[loop.index0].start_time.strftime('%H:%M') }}{% else %}{% endif %}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ day }}_end_time" class="form-label">End Time</label>
+                                <input type="time" class="form-control" id="{{ day }}_end_time" name="{{ day }}_end_time"
+                                    value="{% if schedules and schedules|length > loop.index0 and schedules[loop.index0].end_time %}{{ schedules[loop.index0].end_time.strftime('%H:%M') }}{% else %}{% endif %}">
+                            </div>
+                        </div>
+
+                        <small class="text-muted">Leave both start and end times empty if the doctor is not available on this day.</small>
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('admin.manage_doctors') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back
+                        </a>
+                        <button type="submit" class="btn btn-info text-white">
+                            <i class="fas fa-save me-2"></i>Save Schedule
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}All Appointments{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2><i class="fas fa-calendar-alt me-2"></i>All Appointments</h2>
+  <form class="d-flex" method="GET" action="{{ url_for('admin.view_all_appointments') }}">
+    <select class="form-select me-2" name="status">
+      <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All</option>
+      <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Scheduled</option>
+      <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+      <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+    </select>
+    <button class="btn btn-primary" type="submit"><i class="fas fa-filter me-2"></i>Filter</button>
+  </form>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    {% if appointments.items %}
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Doctor</th>
+              <th>Specialization</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th>Booked On</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in appointments.items %}
+            <tr>
+              <td>{{ a.patient.username }}</td>
+              <td>{{ a.doctor.name }}</td>
+              <td><span class="badge bg-info">{{ a.doctor.specialization }}</span></td>
+              <td>{{ a.appointment_date.strftime('%b %d, %Y') }}</td>
+              <td>{{ a.appointment_time.strftime('%I:%M %p') }}</td>
+              <td>
+                {% if a.status == 'scheduled' %}
+                  <span class="badge bg-success">Scheduled</span>
+                {% elif a.status == 'completed' %}
+                  <span class="badge bg-primary">Completed</span>
+                {% else %}
+                  <span class="badge bg-danger">Cancelled</span>
+                {% endif %}
+              </td>
+              <td>{{ a.created_at.strftime('%b %d, %Y') }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if appointments.pages > 1 %}
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          {% if appointments.has_prev %}
+          <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.view_all_appointments', page=appointments.prev_num, status=status_filter) }}">Previous</a>
+          </li>
+          {% endif %}
+
+          {% for page_num in appointments.iter_pages() %}
+            {% if page_num %}
+              {% if page_num != appointments.page %}
+                <li class="page-item"><a class="page-link" href="{{ url_for('admin.view_all_appointments', page=page_num, status=status_filter) }}">{{ page_num }}</a></li>
+              {% else %}
+                <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+
+          {% if appointments.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.view_all_appointments', page=appointments.next_num, status=status_filter) }}">Next</a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+    {% else %}
+      <div class="text-center py-5">
+        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">No appointments found</h5>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
